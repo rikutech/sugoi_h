@@ -22,3 +22,38 @@ filter' _ [] = []
 filter' f (x:xs)
   | f x = x : filter' f xs
   | otherwise = filter' f xs
+
+-- 5-5 畳み込み
+
+
+-- 左畳み込みによるreverseの実装
+reverse' :: [a] -> [a]
+reverse' = foldl (\acc x -> x : acc) []
+
+reverse'' :: [a] -> [a]
+reverse'' = foldl (flip (:)) []
+
+-- 右畳み込みによるmapの実装
+-- :は++より圧倒的に早いのでlistを返すときは右畳み込みを使う
+map'' :: (a -> b) -> [a] -> [b]
+map'' f xs = foldr (\x acc -> f x : acc) [] xs
+
+-- foldl1はlistの先頭(foldr1なら末尾)を初期アキュムレーターとして使う
+maximum' :: (Ord a) => [a] -> a
+maximum' = foldl1 max
+
+product' :: (Num a) => [a] -> a
+product' = foldl1 (*)
+
+filter'' :: (a -> Bool) -> [a] -> [a]
+filter'' p = foldr (\x acc -> if p x then x : acc else acc) []
+
+last' :: [a] -> a
+last' = foldr1 (\_ acc -> acc)
+
+sqrtSums :: Int
+sqrtSums = length (takeWhile (< 1000) (scanl1 (+) (map sqrt [1..]))) + 1
+
+-- 関数合成
+twiceReverse :: (Num a) => [a] -> [a]
+twiceReverse = reverse . map (\x -> x * 2)
